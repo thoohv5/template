@@ -1,0 +1,102 @@
+definitions:
+  http.ResponseEntity:
+    properties:
+      data:
+        description: 响应数据
+      errcode:
+        description: 错误码
+        type: integer
+      errmsg:
+        description: 响应消息
+        type: string
+    type: object
+  server.GetExampleResp:
+    properties:
+      id:
+        description: Id
+        type: integer
+      name:
+        description: 名称
+        type: string
+    type: object
+  server.PostExampleReq:
+    properties:
+      id:
+        description: Id
+        type: integer
+      name:
+        description: 名称
+        type: string
+    required:
+    - id
+    type: object
+  server.PostExampleResp:
+    properties:
+      id:
+        description: Id
+        type: integer
+      name:
+        description: 名称
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /get-example:
+    get:
+      consumes:
+      - application/json
+      description: 获取swagger格式
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: 姓名
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.ResponseEntity'
+            - properties:
+                data:
+                  $ref: '#/definitions/server.GetExampleResp'
+              type: object
+      summary: 示例
+      tags:
+      - 用户模块
+  /post-example:
+    post:
+      consumes:
+      - application/json
+      description: 获取swagger格式
+      parameters:
+      - description: 请求值
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/server.PostExampleReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.ResponseEntity'
+            - properties:
+                data:
+                  $ref: '#/definitions/server.PostExampleResp'
+              type: object
+      summary: 示例
+      tags:
+      - 用户模块
+swagger: "2.0"

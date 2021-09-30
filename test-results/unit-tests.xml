@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/thoohv5/template/cmd/server" timestamp="2021-10-12T21:56:21+08:00">
+		<properties>
+			<property name="go.version" value="go1.17.1 darwin/amd64"></property>
+		</properties>
+	</testsuite>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/thoohv5/template/internal/data" timestamp="2021-10-12T21:56:21+08:00">
+		<properties>
+			<property name="go.version" value="go1.17.1 darwin/amd64"></property>
+		</properties>
+	</testsuite>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/thoohv5/template/internal/ent" timestamp="2021-10-12T21:56:21+08:00">
+		<properties>
+			<property name="go.version" value="go1.17.1 darwin/amd64"></property>
+		</properties>
+	</testsuite>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/thoohv5/template/internal/router" timestamp="2021-10-12T21:56:21+08:00">
+		<properties>
+			<property name="go.version" value="go1.17.1 darwin/amd64"></property>
+		</properties>
+	</testsuite>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/thoohv5/template/internal/server" timestamp="2021-10-12T21:56:21+08:00">
+		<properties>
+			<property name="go.version" value="go1.17.1 darwin/amd64"></property>
+		</properties>
+	</testsuite>
+	<testsuite tests="0" failures="0" time="0.000000" name="github.com/thoohv5/template/internal/service" timestamp="2021-10-12T21:56:21+08:00">
+		<properties>
+			<property name="go.version" value="go1.17.1 darwin/amd64"></property>
+		</properties>
+	</testsuite>
+</testsuites>

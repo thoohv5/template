@@ -1,0 +1,28 @@
+# 服务器
+[http]
+    # 地址和端口
+    local_addr = "127.0.0.1:8080"
+    # Swagger 配置 是否启用，正式环境请设置为 false
+    swagger_enabled = false
+
+
+# 数据库配置
+[database]
+    driver = "mysql"
+    dsn = "root:password@tcp(127.0.0.1:3306)/tho_primary"
+    max_idle_conns = 3
+    max_open_conns = 3
+    conn_max_lifetime = 3
+    conn_max_idletime = 3
+    debug = true
+    tracing = true
+
+# redis配置
+[redis]
+    network = "tcp"
+    addr = "http://127.0.0.1:6379"
+    password = "password"
+    db = 1
+    dial_timeout = 1
+    read_timeout = 1
+    write_timeout = 1

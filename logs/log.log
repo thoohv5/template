@@ -1,0 +1,1 @@
+{"level":"error","time":"2021-10-17T11:56:20.792+0800","caller":"/Users/thooh/Workspace/go/src/github.com/thoohv5/template/internal/data/data.go:36","msg":"db open err","error":"failed to open primary db: dial tcp 127.0.0.1:3306: connect: connection refused"}

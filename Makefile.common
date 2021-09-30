@@ -1,0 +1,155 @@
+GO				:= go
+PROTOC			:= protoc
+FIRST_GOPATH	:= $(firstword $(subst :, ,$(shell $(GO) env GOPATH)))
+PREFIX			?= $(shell pwd)
+CON_PATH    	:= $(PREFIX)/internal/ent/schema
+
+GOLANGCI_LINT			?= $(FIRST_GOPATH)/bin/golangci-lint
+GOLANGCI_LINT_OPTS		?=
+GOCOV                   ?= $(FIRST_GOPATH)/bin/gocov
+GOCOV_HTML              ?= $(FIRST_GOPATH)/bin/gocov-html
+GOIMPORTS               ?= $(FIRST_GOPATH)/bin/goimports
+GOTESTSUM				?= $(FIRST_GOPATH)/bin/gotestsum
+GO_STRINGER             ?= $(FIRST_GOPATH)/bin/stringer
+GOCONVERTER             ?= $(FIRST_GOPATH)/bin/converter
+GO_ENTC             	?= $(FIRST_GOPATH)/bin/entc
+GO_SWAG             	?= $(FIRST_GOPATH)/bin/swag
+
+
+
+pkgs := ./...
+test-pkgs = $(shell go list ./... | grep -v -E '/vendor/|/pkg/|/internal/pkg/|/internal/ent/')
+gofmt-files = $(shell go list -f '{{.Dir}}' ./... | grep -v -E '/vendor/|/pkg/|/internal/pkg/|/internal/ent/')
+
+GOTEST_DIR := test-results
+test-flags := -v
+ifeq ($(GOHOSTARCH),amd64)
+	ifeq ($(GOHOSTOS),$(filter $(GOHOSTOS),linux freebsd darwin windows))
+		# Only supported on amd64
+		test-flags := $(test-flags) -race
+	endif
+endif
+
+CON_DSN  := "root:password@tcp(127.0.0.1:3306)"
+CON_DATABASES := tho_primary
+CON_THO_PRIMARY_TABLES  := "user,user_info,user_extend,user_account,phone_account,mini_program_account"
+
+$(GOLANGCI_LINT): go.sum
+	@echo "> installing golangci-lint"
+	@$(GO) install "github.com/golangci/golangci-lint/cmd/golangci-lint"
+
+$(GOCOV): go.sum
+	@echo "> installing gocov"
+	@$(GO) install "github.com/axw/gocov/gocov"
+
+$(GOCOV_HTML): go.sum
+	@echo "> installing gocov-html"
+	@$(GO) install "github.com/matm/gocov-html"
+
+$(GOIMPORTS): go.sum
+	@echo "> installing goimports"
+	@$(GO) install "golang.org/x/tools/cmd/goimports"
+
+$(GOTESTSUM): go.sum
+	@echo "> installing gotestsum"
+	@$(GO) install "gotest.tools/gotestsum"
+
+$(GOCONVERTER): go.sum
+	@echo "> installing converter"
+	@$(GO) install "github.com/thoohv5/converter/cmd/converter"
+
+$(GO_ENTC): go.sum
+	@echo "> installing entc"
+	@$(GO) install "github.com/facebook/ent/cmd/entc"
+
+$(GO_SWAG): go.sum
+	@echo "> installing swag"
+	@$(GO) install "github.com/swaggo/swag/cmd/swag@latest"
+
+# This rule is used to forward a target like "test" to "common-test".  This
+# allows a new "build" target to be defined in a Makefile which includes this
+# one and override "common-build" without override warnings.
+%: common-% ;
+
+.PHONY: common-all
+common-all: lint test
+
+
+.PHONY: common-setup
+common-setup:
+	@echo ">> Setup environments"
+	@$(GO) env -w GO111MODULE=on
+	@$(GO) env -w GOPRIVATE=gitee.com
+	@$(GO) env -w GOPROXY=https://goproxy.cn,direct
+
+.PHONY: common-help
+common-help:
+	@echo ''
+	@echo 'Usage:'
+	@echo ' make [target]'
+	@echo ''
+	@echo 'Targets:'
+	@awk '/^[a-zA-Z\-\_0-9]+:/ { \
+	helpMessage = match(lastLine, /^# (.*)/); \
+		if (helpMessage) { \
+			helpCommand = substr($$1, 0, index($$1, ":")-1); \
+			helpMessage = substr(lastLine, RSTART + 2, RLENGTH); \
+			printf "\033[36m%-22s\033[0m %s\n", helpCommand,helpMessage; \
+		} \
+	} \
+	{ lastLine = $$0 }' $(MAKEFILE_LIST)
+
+.DEFAULT_GOAL := help
+
+
+.PHONY: common-test
+common-test:
+	@echo ">> running tests"
+	@$(GO) test $(test-flags) $(test-pkgs)
+
+
+$(GOTEST_DIR):
+	@mkdir -p $@
+
+
+coverprofile-txt = $(GOTEST_DIR)/coverage.txt
+coverprofile-json = $(GOTEST_DIR)/coverage.json
+coverreport-html = $(GOTEST_DIR)/coverage.html
+cover-flags = -coverprofile=$(coverprofile-txt) -covermode=atomic
+
+
+.PHONY: common-cover
+common-cover: $(GOTESTSUM) $(GOCOV) $(GOCOV_HTML) | $(GOTEST_DIR)
+	@echo ">> running test coverage"
+	@$(GOTESTSUM) --format testname --junitfile $(GOTEST_DIR)/unit-tests.xml -- \
+			$(test-flags) $(cover-flags) $(test-pkgs) && \
+		$(GOCOV) convert $(coverprofile-txt) >$(coverprofile-json) && \
+		$(GOCOV) report $(coverprofile-json) && \
+		$(GOCOV_HTML) $(GOTEST_DIR)/coverage.json >$(GOTEST_DIR)/coverage.html
+
+
+.PHONY: common-lint
+common-lint: $(GOLANGCI_LINT)
+	@echo ">> linting code"
+# 'go list' needs to be executed before staticcheck to prepopulate the modules cache.
+# Otherwise staticcheck might fail randomly for some reason not yet explained.
+	@$(GO) list -e -compiled -test=true -export=false -deps=true -find=false -tags= -- ./... > /dev/null
+	@$(GOLANGCI_LINT) run $(GOLANGCI_LINT_OPTS) $(pkgs)
+
+.PHONY: common-format
+common-format: $(GOIMPORTS)
+	@echo ">> formatting code"
+	@$(GOIMPORTS) -local "git.medlinker.com" -w $(gofmt-files)
+
+.PHONY: common-schema
+common-schema: $(GOCONVERTER) $(GO_ENTC)
+	@echo ">> converter schema converter"
+	@$(foreach database,$(CON_DATABASES),$(GOCONVERTER) -dsn $(CON_DSN)/$(database) -tables $(CON_$(shell echo $(database)|tr a-z A-Z)_TABLES) -effect 1 -path $(CON_PATH);)
+	@#$(GOCONVERTER) -dsn $(CON_DSN) -tables $(CON_TABLES) -effect 1 -path $(CON_PATH)
+	@echo ">> converter schema entc"
+	@$(GO_ENTC) generate $(CON_PATH)
+
+.PHONY: common-swag
+common-swag: $(GO_SWAG)
+	@echo ">> swag init"
+	@$(GO_SWAG) init -d ./internal/server  -g ../../cmd/server/main.go -o ./api/docs --parseDependency
