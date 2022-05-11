@@ -101,6 +101,10 @@ common-help:
 
 .DEFAULT_GOAL := help
 
+.PHONY: common-config
+common-config:
+	@echo ">> running config"
+	@$(shell cd "./configs" && for f in `ls *.example`; do cp -f $$f $${f/%.example/}; done)
 
 .PHONY: common-test
 common-test:

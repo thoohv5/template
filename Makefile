@@ -20,6 +20,7 @@ build:
 # run
 run:
 	@$(MAKE) generate
+	@$(MAKE) common-config
 	@$(GO) run $(PREFIX)/cmd/server -conf $(PREFIX)/configs/config.toml
 
 
