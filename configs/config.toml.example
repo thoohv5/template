@@ -8,14 +8,24 @@
 
 # 数据库配置
 [database]
+    # 驱动：MySQL/PostgresSQL/SQLite
     driver = "mysql"
-    dsn = "root:password@tcp(127.0.0.1:3306)/tho_primary"
+    # 源
+    dsn = "root:password@tcp(127.0.0.1:3306)/test?charset=utf8mb4&parseTime=True&loc=Local"
+    # 最大空闲连接数
+    conn_max_idle_conns = 3
+    # 最大连接数
     max_idle_conns = 3
+    # 最大可重用连接数
     max_open_conns = 3
-    conn_max_lifetime = 3
-    conn_max_idletime = 3
-    debug = true
-    tracing = true
+    # 备库源
+    slave = []
+    # 数据日志
+    [database.log]
+        # 数据库日志：0-无日志, 1-写日志, 2-读写日志
+        mode = 2
+        # 日志类别: 1-无，2-Error, 3-Warn, 4-Info
+        cat = 4
 
 # redis配置
 [redis]

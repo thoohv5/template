@@ -2,12 +2,12 @@
 package server
 
 import (
+	"github.com/thoohv5/template/internal/service/example"
 	"github.com/thoohv5/template/pkg/http"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/thoohv5/template/internal/pkg/config"
-	"github.com/thoohv5/template/internal/service"
 	"github.com/thoohv5/template/pkg/log"
 )
 
@@ -18,7 +18,7 @@ type server struct {
 	log log.ILog
 
 	// 业务
-	svr service.IService
+	svr example.IService
 }
 
 // IServer 服务标准
@@ -28,7 +28,7 @@ type IServer interface {
 }
 
 // New 创建
-func New(cf config.IConfig, log log.ILog, svr service.IService) IServer {
+func New(cf config.IConfig, log log.ILog, svr example.IService) IServer {
 	return &server{
 		cf:  cf,
 		log: log,
@@ -56,11 +56,8 @@ func (s *server) GetExample(gtx *gin.Context) {
 		resp.Error(err)
 		return
 	}
-	ret := new(GetExampleResp)
-	ret.Id = req.Id
-	ret.Name = req.Name
 
-	resp.DefaultSuccess(ret)
+	resp.Error(s.svr.Test(gtx, req.Name))
 }
 
 // PostExample 示例

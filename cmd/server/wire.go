@@ -20,5 +20,15 @@ import (
 
 // initApp init application.
 func initApp() (pap.IApp, func(), error) {
-	panic(wire.Build(config.ProviderSet, log.ProviderSet, data.ProviderSet, service.ProviderSet, router.ProviderSet, server.ProviderSet, app.ProviderSet))
+	panic(
+		wire.Build(
+			config.ProviderSet,
+			log.ProviderSet,
+			data.ProviderSet,
+			service.ProviderSet,
+			router.ProviderSet,
+			server.ProviderSet,
+			app.ProviderSet,
+		),
+	)
 }

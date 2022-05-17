@@ -7,15 +7,18 @@ import (
 	"go.uber.org/zap/zapcore"
 
 	"gopkg.in/natefinch/lumberjack.v2"
+
+	"github.com/thoohv5/template/pkg/util"
 )
 
 func NewZap() ILog {
+
 	hook := lumberjack.Logger{
-		Filename:   "./logs/log.log", // 日志文件路径
-		MaxSize:    128,              // 每个日志文件保存的最大尺寸 单位：M
-		MaxBackups: 30,               // 日志文件最多保存多少个备份
-		MaxAge:     7,                // 文件最多保存多少天
-		Compress:   true,             // 是否压缩
+		Filename:   util.AbPath("../../logs/log.log"), // 日志文件路径
+		MaxSize:    128,                               // 每个日志文件保存的最大尺寸 单位：M
+		MaxBackups: 30,                                // 日志文件最多保存多少个备份
+		MaxAge:     7,                                 // 文件最多保存多少天
+		Compress:   true,                              // 是否压缩
 	}
 
 	encoderConfig := zapcore.EncoderConfig{

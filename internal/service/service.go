@@ -2,7 +2,7 @@
 package service
 
 import (
-	"github.com/thoohv5/template/internal/data"
+	ds "github.com/thoohv5/template/internal/data/standard"
 	"github.com/thoohv5/template/internal/pkg/config"
 	"github.com/thoohv5/template/pkg/log"
 )
@@ -14,14 +14,15 @@ type service struct {
 	log log.ILog
 
 	// 数据源
-	data data.IData
+	data ds.IData
 }
 
 // IService 业务标准
-type IService interface{}
+type IService interface {
+}
 
 // New 创建
-func New(cf config.IConfig, log log.ILog, data data.IData) IService {
+func New(cf config.IConfig, log log.ILog, data ds.IData) IService {
 	return &service{
 		cf:  cf,
 		log: log,

@@ -2,7 +2,7 @@ package log
 
 import (
 	"github.com/google/wire"
-	
+
 	"github.com/thoohv5/template/internal/pkg/config"
 	"github.com/thoohv5/template/pkg/log"
 )

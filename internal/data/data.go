@@ -1,38 +1,38 @@
 package data
 
 import (
-	"github.com/go-redis/redis/v8"
+	"fmt"
 
+	"github.com/go-redis/redis/v8"
+	"go.uber.org/zap"
+
+	ds "github.com/thoohv5/template/internal/data/standard"
 	"github.com/thoohv5/template/internal/pkg/config"
-	"github.com/thoohv5/template/internal/pkg/dbx/entx"
+	"github.com/thoohv5/template/pkg/dbx/adapter"
+	dbs "github.com/thoohv5/template/pkg/dbx/standard"
+
+	// "github.com/thoohv5/template/internal/pkg/dbx/entx"
 	"github.com/thoohv5/template/pkg/log"
 )
 
 type data struct {
 	rdb *redis.Client
-	edb *entx.ClientSet
-}
-
-// IData 数据源
-type IData interface {
-	// GetRdb redis
-	GetRdb() *redis.Client
-	// GetEdb db
-	GetEdb() *entx.ClientSet
+	edb dbs.IBuilder
 }
 
 // New .
-func New(c config.IConfig, log log.ILog) (IData, func(), error) {
+func New(c config.IConfig, log log.ILog) (ds.IData, func(), error) {
 	d := &data{
 		// rdb: rdx.Open(c.GetRedis()),
 	}
-	// clientSet, err := dbx.OpenClientSet("main", c.GetDatabase())
-	// if err != nil {
-	// 	log.Error("db open err", zap.Error(err))
-	//
-	// 	return nil, nil, fmt.Errorf("db open err:%w", err)
-	// }
-	// d.edb = clientSet
+
+	builder, err := adapter.GetConnect(adapter.Gorm).Connect(c.GetDatabase(), dbs.WithLogger(log))
+	if err != nil {
+		log.Error("db open err", zap.Error(err))
+
+		return nil, nil, fmt.Errorf("db open err:%w, config:%+v", err, c.GetDatabase())
+	}
+	d.edb = builder
 
 	return d, func() {
 		// if err := d.rdb.Close(); err != nil {
@@ -52,6 +52,6 @@ func (d *data) GetRdb() *redis.Client {
 }
 
 // GetEdb db
-func (d *data) GetEdb() *entx.ClientSet {
+func (d *data) GetEdb() dbs.IBuilder {
 	return d.edb
 }

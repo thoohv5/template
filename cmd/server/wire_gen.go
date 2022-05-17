@@ -8,12 +8,13 @@ package main
 
 import (
 	"github.com/thoohv5/template/internal/data"
+	"github.com/thoohv5/template/internal/data/dao"
 	app2 "github.com/thoohv5/template/internal/pkg/app"
 	"github.com/thoohv5/template/internal/pkg/config"
 	"github.com/thoohv5/template/internal/pkg/log"
 	"github.com/thoohv5/template/internal/router"
 	"github.com/thoohv5/template/internal/server"
-	"github.com/thoohv5/template/internal/service"
+	"github.com/thoohv5/template/internal/service/example"
 	"github.com/thoohv5/template/pkg/app"
 )
 
@@ -27,7 +28,8 @@ func initApp() (app.IApp, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	iService := service.New(iConfig, logger, iData)
+	iTest := dao.NewTest(iData)
+	iService := example.New(logger, iTest)
 	iServer := server.New(iConfig, logger, iService)
 	registerRouter := router.New(iConfig, iServer)
 	iApp := app2.New(iConfig, registerRouter)

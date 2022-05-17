@@ -3,12 +3,12 @@ package app
 import (
 	"fmt"
 	"os"
-	
+
 	"github.com/gin-gonic/gin"
 	"github.com/google/wire"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	
+
 	"github.com/thoohv5/template/api/docs"
 	"github.com/thoohv5/template/internal/pkg/config"
 	"github.com/thoohv5/template/pkg/app"
@@ -45,7 +45,6 @@ func (p *application) Run(addr ...string) error {
 	return gen.Run(addr...)
 }
 
-
 func InitSwagRouter(r *gin.Engine, localAddr string) {
 	// programmatically set swagger info
 	docs.SwaggerInfo.Title = "文档"
@@ -54,9 +53,9 @@ func InitSwagRouter(r *gin.Engine, localAddr string) {
 	docs.SwaggerInfo.Host = localAddr
 	docs.SwaggerInfo.BasePath = "/user"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
-	
+
 	// 文档
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	
+
 	_, _ = fmt.Fprintf(os.Stdout, "http://%s/swagger/index.html\n", localAddr)
 }
