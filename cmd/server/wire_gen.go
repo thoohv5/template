@@ -32,8 +32,13 @@ func initApp() (app.IApp, func(), error) {
 	iService := example.New(logger, iTest)
 	iServer := server.New(iConfig, logger, iService)
 	registerRouter := router.New(iConfig, iServer)
-	iApp := app2.New(iConfig, registerRouter)
+	iApp, cleanup2, err := app2.New(iConfig, registerRouter)
+	if err != nil {
+		cleanup()
+		return nil, nil, err
+	}
 	return iApp, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }

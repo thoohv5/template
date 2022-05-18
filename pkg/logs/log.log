@@ -1,0 +1,2 @@
+{"level":"error","time":"2022-05-19T20:26:19.649+0800","caller":"/Users/thooh/Sites/github.com/thoohv5/template/pkg/logx/zap/logger.go:93","msg":"db open err, err:%!w(*net.OpError=&{dial tcp <nil> 0xc000483bc0 0xc0003ce4c0})"}
+{"level":"error","time":"2022-05-19T20:26:44.689+0800","caller":"/Users/thooh/Sites/github.com/thoohv5/template/pkg/logx/zap/logger.go:93","msg":"db open err, err:%!w(*net.OpError=&{dial tcp <nil> 0xc0003e1890 0xc0003c65a0})"}

@@ -18,11 +18,13 @@ require (
 	github.com/golangci/golangci-lint v1.42.1
 	github.com/google/wire v0.5.0
 	github.com/matm/gocov-html v0.0.0-20200509184451-71874e2e203b
+	github.com/opentracing/opentracing-go v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.3.2
 	github.com/swaggo/swag v1.7.3
 	github.com/thoohv5/converter v0.0.0-20210726070010-30cceb522cda
+	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.uber.org/zap v1.21.0
 	golang.org/x/tools v0.1.7
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
@@ -36,6 +38,7 @@ require (
 	4d63.com/gochecknoglobals v0.0.0-20201008074935-acfc0b28355a // indirect
 	github.com/Antonboom/errname v0.1.4 // indirect
 	github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 // indirect
+	github.com/HdrHistogram/hdrhistogram-go v1.1.2 // indirect
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/OpenPeeDeeP/depguard v1.0.1 // indirect
@@ -170,6 +173,7 @@ require (
 	github.com/timakin/bodyclose v0.0.0-20200424151742-cb6215831a94 // indirect
 	github.com/tomarrell/wrapcheck/v2 v2.3.0 // indirect
 	github.com/tommy-muehle/go-mnd/v2 v2.4.0 // indirect
+	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	github.com/ultraware/funlen v0.0.3 // indirect
 	github.com/ultraware/whitespace v0.0.4 // indirect

@@ -4,18 +4,18 @@ package server
 import (
 	"github.com/thoohv5/template/internal/service/example"
 	"github.com/thoohv5/template/pkg/http"
+	los "github.com/thoohv5/template/pkg/logx/standard"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/thoohv5/template/internal/pkg/config"
-	"github.com/thoohv5/template/pkg/log"
 )
 
 type server struct {
 	// 配置
 	cf config.IConfig
 	// 日志
-	log log.ILog
+	log los.ILogger
 
 	// 业务
 	svr example.IService
@@ -28,7 +28,7 @@ type IServer interface {
 }
 
 // New 创建
-func New(cf config.IConfig, log log.ILog, svr example.IService) IServer {
+func New(cf config.IConfig, log los.ILogger, svr example.IService) IServer {
 	return &server{
 		cf:  cf,
 		log: log,

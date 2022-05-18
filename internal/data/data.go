@@ -4,15 +4,12 @@ import (
 	"fmt"
 
 	"github.com/go-redis/redis/v8"
-	"go.uber.org/zap"
 
 	ds "github.com/thoohv5/template/internal/data/standard"
 	"github.com/thoohv5/template/internal/pkg/config"
 	"github.com/thoohv5/template/pkg/dbx/adapter"
 	dbs "github.com/thoohv5/template/pkg/dbx/standard"
-
-	// "github.com/thoohv5/template/internal/pkg/dbx/entx"
-	"github.com/thoohv5/template/pkg/log"
+	los "github.com/thoohv5/template/pkg/logx/standard"
 )
 
 type data struct {
@@ -21,14 +18,14 @@ type data struct {
 }
 
 // New .
-func New(c config.IConfig, log log.ILog) (ds.IData, func(), error) {
+func New(c config.IConfig, log los.ILogger) (ds.IData, func(), error) {
 	d := &data{
 		// rdb: rdx.Open(c.GetRedis()),
 	}
 
 	builder, err := adapter.GetConnect(adapter.Gorm).Connect(c.GetDatabase(), dbs.WithLogger(log))
 	if err != nil {
-		log.Error("db open err", zap.Error(err))
+		log.Error("db open err, err:%w", err)
 
 		return nil, nil, fmt.Errorf("db open err:%w, config:%+v", err, c.GetDatabase())
 	}

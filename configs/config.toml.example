@@ -5,6 +5,12 @@
     # Swagger 配置 是否启用，正式环境请设置为 false
     swagger_enabled = false
 
+# 日志
+[log]
+    out = "std,../../logs/log.log"
+    # 日志类别: debug, warn, info，error
+    level = "debug"
+
 
 # 数据库配置
 [database]
@@ -20,12 +26,6 @@
     max_open_conns = 3
     # 备库源
     slave = []
-    # 数据日志
-    [database.log]
-        # 数据库日志：0-无日志, 1-写日志, 2-读写日志
-        mode = 2
-        # 日志类别: 1-无，2-Error, 3-Warn, 4-Info
-        cat = 4
 
 # redis配置
 [redis]

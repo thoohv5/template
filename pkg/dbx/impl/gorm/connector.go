@@ -4,10 +4,8 @@ import (
 	"strings"
 	"time"
 
-	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"gorm.io/plugin/dbresolver"
 
 	"github.com/thoohv5/template/pkg/dbx/standard"
@@ -16,23 +14,17 @@ import (
 // Connect 连接
 func (g *gDb) Connect(config *standard.Config, sos ...standard.ServerOption) (standard.IBuilder, error) {
 	var (
-		glog Logger
-		err  error
-		gdb  *gorm.DB
+		err error
+		gdb *gorm.DB
 	)
 
-	if cf := config.GetLog(); cf.Mode > 0 {
-		glog = NewLogger(zap.L())
-		glog.SetAsDefault()
-		glog.LogMode(logger.LogLevel(cf.Cat))
-	}
 	gdb, err = gorm.Open(getDial(config.Driver, config.Dsn), &gorm.Config{
 		QueryFields: true,
-		Logger:      glog,
 	})
 	if err != nil {
 		return nil, err
 	}
+	_ = gdb.Use(&OpentracingPlugin{})
 	dsn := CopyGDb(gdb, append(sos, standard.WithIsWrite(true))...)
 	db, err := gdb.DB()
 	if err != nil {

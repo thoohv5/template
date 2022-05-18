@@ -26,7 +26,6 @@ func New(log standard.ILogger, testDao dao.ITest) IService {
 }
 
 func (s *service) Test(ctx context.Context, name string) (err error) {
-	s.log.Error("test")
 	return s.testDao.Add(ctx, &model.Test{
 		Name: name,
 	})
