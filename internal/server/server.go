@@ -3,7 +3,7 @@ package server
 
 import (
 	"github.com/thoohv5/template/internal/service/example"
-	"github.com/thoohv5/template/pkg/http"
+	"github.com/thoohv5/template/pkg/app/http"
 	los "github.com/thoohv5/template/pkg/logx/standard"
 
 	"github.com/gin-gonic/gin"
