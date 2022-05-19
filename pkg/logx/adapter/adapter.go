@@ -1,8 +1,8 @@
 package adapter
 
 import (
+	"github.com/thoohv5/template/pkg/logx/impl/zap"
 	los "github.com/thoohv5/template/pkg/logx/standard"
-	"github.com/thoohv5/template/pkg/logx/zap"
 )
 
 func GetAdapter(name string, config *los.Config) los.ILogger {
